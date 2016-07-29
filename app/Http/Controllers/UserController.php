@@ -14,6 +14,8 @@ use Response;
 use App\Models\Role;
 use Illuminate\Support\Facades\Input;
 use Carbon\Carbon;
+use Yajra\Datatables\Datatables;
+use App\Models\User;
 
 class UserController extends InfyOmBaseController {
 
@@ -22,7 +24,6 @@ class UserController extends InfyOmBaseController {
 
     public function __construct(UserRepository $userRepo) {
         $this->userRepository = $userRepo;
-        
     }
 
     /**
@@ -32,17 +33,22 @@ class UserController extends InfyOmBaseController {
      * @return Response
      */
     public function index(Request $request) {
-        $this->userRepository->pushCriteria(new RequestCriteria($request));
-        $users = $this->userRepository->paginate(1);
-        // select list roles
-        $selects = Role::all(['id', 'title']);
-        $roles = array();
-        foreach ($selects as $select) {
-            $roles[$select->id] = $select->title;
-        }
-        return view('users.index')
-                        ->with('users', $users)
-                        ->with('roles',$roles);
+        return view('users.index');
+    }
+
+    // Datatable show
+    public function getUsers() {
+
+        $users = $this->userRepository->all();
+        // $users = User::select(['id','name','email']);
+        return Datatables::of($users)
+        ->editColumn('role', function($user) {
+        return $user->roles->title;
+        })
+        ->addColumn('action', function($user) {
+            return view("users.table")->with('user',$user);
+        })
+        ->make(true);
     }
 
     /**
@@ -147,6 +153,7 @@ class UserController extends InfyOmBaseController {
 
         $avatar = Input::file('image');
         $input = $request->all();
+        $input['email'] = $user->email;
         if ($avatar == null) {
             $input['image'] = $user->image;
             $food = $this->userRepository->update($input, $id);
@@ -157,6 +164,9 @@ class UserController extends InfyOmBaseController {
             $input['image'] = $filename;
             $upload_success = $avatar->move($destinationPath, $filename);
             if ($upload_success) {
+                if ($user->image != 'avatar.jpg') {
+                    @unlink(public_path() . '\img\avatar' . "\\" . $user->image); // delete image if it change
+                }
                 $food = $this->userRepository->update($input, $id);
             }
         }
@@ -183,7 +193,9 @@ class UserController extends InfyOmBaseController {
         }
 
         $this->userRepository->delete($id);
-
+        if ($user->image != 'avatar.jpg') {
+            @unlink(public_path() . '\img\avatar' . "\\" . $user->image); // delete image if it change
+        }
         Flash::success('User deleted successfully.');
 
         return redirect(route('users.index'));

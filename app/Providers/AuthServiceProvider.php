@@ -28,10 +28,10 @@ class AuthServiceProvider extends ServiceProvider
         // phân quyền chức năng
         
         $gate->define('admin', function ($user){
-            return $user->role = 1;
+            return $user->role == 1;
         });
         $gate->define('user', function($user){
-            return $user->role =0;
+            return $user->role == 0;
         });
 
     }

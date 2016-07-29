@@ -17,7 +17,7 @@ class CreatefoodsTable extends Migration {
             $table->string('name', 100) -> unique();
             $table->string('image');
             $table->integer('category_id')->unsigned();
-            $table->string('content');
+            $table->text('content');
             $table->timestamps();
             $table->softDeletes();
         });

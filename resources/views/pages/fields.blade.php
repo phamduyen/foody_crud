@@ -1,7 +1,11 @@
 <!-- Name Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('name', 'Name:') !!}
+    @if(!isset($page))
     {!! Form::text('name', null, ['class' => 'form-control']) !!}
+    @else
+    {!! Form::text('name', null, ['class' => 'form-control', 'readOnly'=>true]) !!}
+    @endif
 </div>
 
 <!-- Content Field -->

@@ -5,16 +5,14 @@ namespace App\Http\Requests;
 use App\Http\Requests\Request;
 use App\Models\Role;
 
-class UpdateRoleRequest extends Request
-{
+class UpdateRoleRequest extends Request {
 
     /**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
      */
-    public function authorize()
-    {
+    public function authorize() {
         return true;
     }
 
@@ -23,8 +21,12 @@ class UpdateRoleRequest extends Request
      *
      * @return array
      */
-    public function rules()
-    {
-        return Role::$rules;
+    public function rules() {
+         $id = $this->segment(2);
+        return [
+        'title' => 'required|max:100|unique:roles,tile,'.$id,
+        'slug' => 'required|max 50'
+        ];
     }
+
 }

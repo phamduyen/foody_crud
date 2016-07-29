@@ -27,7 +27,7 @@ class IsUser {
                 return $next($request);
             }
         }
-        return redirect(url('/home'));
+        return redirect(url('/home')); 
     }
 
 }

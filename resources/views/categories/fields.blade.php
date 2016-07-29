@@ -1,7 +1,11 @@
 <!-- Name Field -->
 <div class="form-group col-sm-12">
     {!! Form::label('name', 'Name:') !!}
+    @if(!isset($category))
     {!! Form::text('name', null, ['class' => 'form-control']) !!}
+    @else
+    {!! Form::text('name', null, ['class' => 'form-control']) !!}
+    @endif
 </div>
 
 <!-- Image Field -->

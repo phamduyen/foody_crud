@@ -64,7 +64,8 @@ class Food extends Model
         'name',
         'image',
         'category_id',
-        'content'
+        'content',
+        'auth_id'
     ];
 
     /**
@@ -76,7 +77,9 @@ class Food extends Model
         'name' => 'string',
         'image' => 'string',
         'category_id' => 'integer',
-        'content' => 'string'
+        'content' => 'string',
+        'auth_id' => 'integer'
+        
     ];
 
     /**
@@ -87,10 +90,15 @@ class Food extends Model
     public static $rules = [
         'name' => 'required|max:100',
         'image' => 'max:1000|image',
-        'content' => 'required'
+        'content' => 'required',
+        'category_id' =>'required|exists:categories,id'
     ];
     public function category() 
 	{
         return $this->belongsTo('App\Models\Category','category_id','id');
 	}
+    public function auth() 
+	{
+        return $this->belongsTo('App\Models\User','auth_id','id');
+	}  
 }

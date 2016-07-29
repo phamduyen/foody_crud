@@ -70,7 +70,7 @@ class Category extends Model
      * @var array
      */
     public static $rules = [
-        'name' => 'required',
+        'name' => 'required|max:100',
         'image' => 'max:2000|image'
     ];
     

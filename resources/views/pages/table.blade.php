@@ -1,14 +1,12 @@
 <table class="table table-responsive" id="pages-table">
     <thead>
         <th>Name</th>
-        <th>Content</th>
         <th colspan="3">Action</th>
     </thead>
     <tbody>
     @foreach($pages as $page)
         <tr>
-            <td>{!! $page->name !!}</td>
-            <td ><div class="td-hiden">{!! $page->content !!}</div></td>
+            <td>{!! $page->name !!}</td>            
             <td>
                 {!! Form::open(['route' => ['pages.destroy', $page->id], 'method' => 'delete']) !!}
                 <div class='btn-group'>

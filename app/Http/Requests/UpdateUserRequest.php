@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests;
 
-
 use App\Models\User;
 
 class UpdateUserRequest extends Request {
@@ -22,13 +21,15 @@ class UpdateUserRequest extends Request {
      * @return array
      */
     public function rules() {
-      
-       //$id = $this->user()->id;
+
+        //$id = $this->user()->id;
         $id = $this->segment(2);
         return [
             'name' => 'required|max:50',
-            'email' => 'required|email|unique:users,email,'.$id,
+            'email' => 'required|email|unique:users,email,' . $id,
             'image' => 'max:1000|image',
+            'name' => 'required|max:50',
+            'role' => 'exists:roles,id'
         ];
     }
 

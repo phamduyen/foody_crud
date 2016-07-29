@@ -116,14 +116,15 @@ class PageController extends InfyOmBaseController
     public function update($id, UpdatePageRequest $request)
     {
         $page = $this->pageRepository->findWithoutFail($id);
-
+        $input = $request->all();
+        $input['name']= $page->name;
         if (empty($page)) {
             Flash::error('Page not found');
 
             return redirect(route('pages.index'));
         }
 
-        $page = $this->pageRepository->update($request->all(), $id);
+        $this->pageRepository->update($input, $id);
 
         Flash::success('Page updated successfully.');
 

@@ -46,17 +46,16 @@ Route::get('/home', 'HomeController@index');
 Route::group(['middleware' => ['login']], function () {
 
     Route::resource('categories', 'CategoryController');
-    
+
     Route::resource('foods', 'FoodController');
-
-    Route::resource('roles', 'RoleController');
-
-    Route::resource('pages', 'PageController');
 
     Route::resource('roles', 'RoleController');
 
     Route::group(['middleware' => ['admin']], function () {
         Route::resource('users', 'UserController');
+        Route::resource('roles', 'RoleController');
+        Route::resource('pages', 'PageController');
+        Route::get('getUser',['as' => 'getUser', 'uses'=>'Usercontroller@getUsers']);
     });
-      Route::resource('roles', 'RoleController');
+    Route::resource('roles', 'RoleController');
 });

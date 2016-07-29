@@ -14,18 +14,19 @@ use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 use Illuminate\Support\Facades\Input;
 use Carbon\Carbon;
-
+use Illuminate\Support\Facades\Gate;
+use \Illuminate\Contracts\Auth\Guard;
 
 class FoodController extends InfyOmBaseController {
 
     /** @var  FoodRepository */
     private $foodRepository;
-    private $categoryRepository;
+    //private $categoryRepository;
 
     public function __construct(FoodRepository $foodRepo) {
         $this->foodRepository = $foodRepo;
-        
     }
+
     /**
      * Display a listing of the Food.
      *
@@ -35,23 +36,27 @@ class FoodController extends InfyOmBaseController {
     public function index(Request $request) {
 
         $this->foodRepository->pushCriteria(new RequestCriteria($request));
-        $foods = $this->foodRepository->paginate(3);
         $selects = Category::all(['id', 'name']);
         $categories = array();
         foreach ($selects as $select) {
             $categories[$select->id] = $select->name;
         }
-//        var_dump($foods);die();SS
+        $foods = $this->foodRepository->all();
+        if (Gate::check('user')) {
+            //$foods = \App\Models\Food::where('auth_id', '=',$request->user()->id)->simplePaginate(3);
+            $foods =$this->foodRepository->findByField('auth_id',$request->user()->id);
+        }
         return view('foods.index')
                         ->with('foods', $foods)->with('categories', $categories);
     }
-    
+
     /**
      * Show the form for creating a new Food.
      *
      * @return Response
      */
     public function create() {
+
         $selects = Category::all(['id', 'name']);
         $categories = array();
         foreach ($selects as $select) {
@@ -70,9 +75,11 @@ class FoodController extends InfyOmBaseController {
     public function store(CreateFoodRequest $request) {
         $avatar = Input::file('image');
         $input = $request->all();
+        $input['auth_id'] = $request->user()->id;
+        //return $input;die();
         if ($avatar == null) {
             $input['image'] = 'avatar.jpg';
-            $food = $this->foodRepository->create($input);
+            $this->foodRepository->create($input);
         } else {
             $destinationPath = public_path() . "/img/food"; // give path of directory where you want to save your files
             $timestamp = str_replace([' ', ':'], '-', Carbon::now()->toDateTimeString());
@@ -96,6 +103,7 @@ class FoodController extends InfyOmBaseController {
      */
     public function show($id) {
         $food = $this->foodRepository->findWithoutFail($id);
+
 
         if (empty($food)) {
             Flash::error('Food not found');
@@ -159,9 +167,9 @@ class FoodController extends InfyOmBaseController {
             $filename = $timestamp . '.' . $avatar->getClientOriginalExtension();
             $input['image'] = $filename;
             $upload_success = $avatar->move($destinationPath, $filename);
-            if ($upload_success) {     
-                if ($food->image!= 'avatar.jpg') {
-                    @unlink(public_path() . '\img\food' . "\\" .$food->image);// delete image if it change
+            if ($upload_success) {
+                if ($food->image != 'avatar.jpg') {
+                    @unlink(public_path() . '\img\food' . "\\" . $food->image); // delete image if it change
                 }
                 $food = $this->foodRepository->update($input, $id);
             }
@@ -179,6 +187,11 @@ class FoodController extends InfyOmBaseController {
      * @return Response
      */
     public function destroy($id) {
+        // limit the funtion
+        if (Gate::check('user')) {
+            Flash::error('You can not do that');
+            abort(503);
+        }
         $food = $this->foodRepository->findWithoutFail($id);
 
         if (empty($food)) {
@@ -186,7 +199,10 @@ class FoodController extends InfyOmBaseController {
             return redirect(route('foods.index'));
         }
         $this->foodRepository->delete($id);
-        @unlink(public_path() . '\img\food' . "\\" . $food->image);
+        if ($food->image != 'avatar.jpg') {
+            @unlink(public_path() . '\img\food' . "\\" . $food->image); // delete image if it change
+        }
+
         Flash::success('Food deleted successfully.');
         return redirect(route('foods.index'));
     }

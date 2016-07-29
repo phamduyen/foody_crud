@@ -12,10 +12,11 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/admin-lte/2.3.3/css/skins/_all-skins.min.css">
         <!-- Ionicons -->
          <!-- DataTables -->
-        <link rel="stylesheet" href="{{ URL::to('/datatables/dataTables.bootstrap.css') }}">
+       
         <link rel="stylesheet" href="https://code.ionicframework.com/ionicons/2.0.1/css/ionicons.min.css">
         <!--<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.12/css/jquery.dataTables.css">-->
         <link rel="stylesheet" href="{{ URL::to('/css/main.css') }}">
+        @yield('styles')
 
     </head>
 
@@ -163,7 +164,7 @@
         <script src="{{ URL::to('/datatables/dataTables.bootstrap.min.js')}}"></script>
         <!--// Ckeditor-->
         <script type="text/javascript" src="{{ URL::to('/ckeditor/ckeditor.js') }}"></script>
-        <script type="text/javascript" src="{{ URL::to('/js/main.js') }}"></script>
+        <!--<script type="text/javascript" src="{{ URL::to('/js/main.js') }}"></script>-->
 
         @yield('scripts')
     </body>

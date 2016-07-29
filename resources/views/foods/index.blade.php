@@ -17,7 +17,7 @@
             <div class="box-body">
                     @include('foods.table')                   
             </div>
-             {{ $foods->links()}}
+             
         </div>
     </div>
 @endsection

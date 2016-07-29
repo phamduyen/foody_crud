@@ -13,8 +13,8 @@ use Prettus\Repository\Criteria\RequestCriteria;
 use Response;
 use Illuminate\Support\Facades\Input;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Gate;
 
 class CategoryController extends InfyOmBaseController {
 
@@ -45,6 +45,10 @@ class CategoryController extends InfyOmBaseController {
      * @return Response
      */
     public function create() {
+        if (Gate::check('user')) {
+            Flash::error('You can not do that');
+            abort(503);
+        }
         return view('categories.create');
     }
 
@@ -106,6 +110,10 @@ class CategoryController extends InfyOmBaseController {
      * @return Response
      */
     public function edit($id) {
+        if (Gate::check('user')) {
+            Flash::error('You can not do that');
+            abort(503);
+        }
         $category = $this->categoryRepository->findWithoutFail($id);
 
         if (empty($category)) {
@@ -126,6 +134,10 @@ class CategoryController extends InfyOmBaseController {
      * @return Response
      */
     public function update($id, UpdateCategoryRequest $request) {
+        if (Gate::check('user')) {
+            Flash::error('You can not do that');
+            abort(503);
+        }
         $category = $this->categoryRepository->findWithoutFail($id);
 
         if (empty($category)) {
@@ -136,8 +148,8 @@ class CategoryController extends InfyOmBaseController {
         $avatar = Input::file('image');
         if ($avatar == null) {
             $input = array('name' => $request->input('name'), 'image' => $category->image);
-             $category = $this->categoryRepository->update($input,$id);
-        }else{
+            $category = $this->categoryRepository->update($input, $id);
+        } else {
             $destinationPath = public_path() . "/img/upload"; // give path of directory where you want to save your files
             $timestamp = str_replace([' ', ':'], '-', Carbon::now()->toDateTimeString());
             $filename = $timestamp . '.' . $avatar->getClientOriginalExtension();
@@ -148,7 +160,7 @@ class CategoryController extends InfyOmBaseController {
             }
         }
         Flash::success('Category updated successfully.');
-        return redirect(route('categories.index'));        
+        return redirect(route('categories.index'));
     }
 
     /**
@@ -159,6 +171,10 @@ class CategoryController extends InfyOmBaseController {
      * @return Response
      */
     public function destroy($id) {
+        if (Gate::check('user')) {
+            Flash::error('You can not do that');
+            abort(503);
+        }
         $category = $this->categoryRepository->findWithoutFail($id);
 
         if (empty($category)) {
@@ -167,20 +183,29 @@ class CategoryController extends InfyOmBaseController {
             return redirect(route('categories.index'));
         }
         Storage::delete("$category->image");
-       // unlink(URL::to("/img/upload/$category->image"));
+        // unlink(URL::to("/img/upload/$category->image"));
+        $this->deleteImage($category->image, 'upload');
         $this->categoryRepository->delete($id);
-        
-        
+
+
         // Delete food is belong to category
-        $foods = \App\Models\Food::where('category_id',$category->id);
-        $foods->delete();
+        $foods = \App\Models\Food::where('category_id', $category->id);
         foreach ($foods as $food) {
-            //unlink("URL::to('/img/food/$food->image')");
-        };
-        
-       
+            $this->deleteImage($food->image, 'food');
+//            if ($food->image != 'avatar.jpg') {
+//                @unlink(public_path() . '\img\food' . "\\" . $food->image); // delete image if it change
+//            }
+        }
+        $foods->delete();
+
         Flash::success('Category deleted successfully.');
         return redirect(route('categories.index'));
+    }
+
+    public function deleteImage($image,$file) {
+        if ($image != 'avatar.jpg') {
+            @unlink(public_path() . '\img'. "\\" .$file . "\\" . $image); // delete image if it change
+        }
     }
 
 }

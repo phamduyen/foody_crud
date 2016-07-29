@@ -3,6 +3,7 @@
     <li class="header">Management</li>
     <!-- Optionally, you can add icons to the links -->
     <!--User-->
+    @can('admin')
     <li class="treeview">
         <a href="#"><i class="fa fa-link"></i> <span>User</span>
             <span class="pull-right-container">
@@ -14,6 +15,18 @@
             <li><a href="{!! route('users.create') !!}">Add new</a></li>
         </ul>
     </li>
+      <li class="treeview">
+        <a href="#"><i class="fa fa-link"></i> <span>Page</span>
+            <span class="pull-right-container">
+                <i class="fa fa-angle-left pull-right"></i>
+            </span>
+        </a>
+        <ul class="treeview-menu">
+            <li><a href="{!! url('/pages') !!}">See all </a></li>
+            <li><a href="{!! route('pages.create') !!}">Add new</a></li>
+        </ul>
+    </li>
+    @endcan
     <!--category-->
     <li class="treeview">
         <a href="#"><i class="fa fa-link"></i> <span>Category</span>
@@ -38,16 +51,6 @@
             <li><a href="{!! route('foods.create') !!}">Add new</a></li>
         </ul>
     </li>
-    <li class="treeview">
-        <a href="#"><i class="fa fa-link"></i> <span>Page</span>
-            <span class="pull-right-container">
-                <i class="fa fa-angle-left pull-right"></i>
-            </span>
-        </a>
-        <ul class="treeview-menu">
-            <li><a href="{!! url('/pages') !!}">See all </a></li>
-            <li><a href="{!! route('pages.create') !!}">Add new</a></li>
-        </ul>
-    </li>
+  
 </ul>
 <!-- /.sidebar-menu -->

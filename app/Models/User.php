@@ -101,4 +101,7 @@ class User extends Model
     public function roles() {
         return $this->belongsTo('App\Models\Role', 'role', 'id');
     }
+    public function foods() {
+        return $this->hasMany('App\Models\Food');
+    }
 }
