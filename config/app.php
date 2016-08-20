@@ -145,7 +145,9 @@ return [
         \InfyOm\Generator\InfyOmGeneratorServiceProvider::class,
         \InfyOm\AdminLTETemplates\AdminLTETemplatesServiceProvider::class,
         // Datatable Laravel
-        Yajra\Datatables\DatatablesServiceProvider::class
+        Yajra\Datatables\DatatablesServiceProvider::class,
+        // JWT
+        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class
     ],
     /*
       |--------------------------------------------------------------------------
@@ -193,6 +195,9 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'Flash' => Laracasts\Flash\Flash::class,
         // datatable
-        'Datatables' => Yajra\Datatables\Facades\Datatables::class
+        'Datatables' => Yajra\Datatables\Facades\Datatables::class,
+        //jwt
+        'JWTAuth' => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'JWTFactory' => Tymon\JWTAuth\Facades\JWTFactory::class
     ],
 ];

@@ -25,6 +25,7 @@ class FoodAPIController extends InfyOmBaseController
 
     public function __construct(FoodRepository $foodRepo)
     {
+        $this->middleware('jwt.auth');
         $this->foodRepository = $foodRepo;
     }
 

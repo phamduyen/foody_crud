@@ -1,17 +1,19 @@
 <?php
 
 /*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where all API routes are defined.
-|
-*/
+  |--------------------------------------------------------------------------
+  | API Routes
+  |--------------------------------------------------------------------------
+  |
+  | Here is where all API routes are defined.
+  |
+ */
 
 
-
-
+// authenticate
+Route::resource('authenticate', 'AuthenticateController', ['only' => ['index']]);
+Route::post('authenticate', 'AuthenticateController@authenticate');
+Route::get('authenticate/user', 'AuthenticateController@getAuthenticatedUser');
 
 Route::resource('categories', 'CategoryAPIController');
 
