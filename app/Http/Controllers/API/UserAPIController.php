@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\API\CreateUserAPIRequest;
 use App\Http\Requests\API\UpdateUserAPIRequest;
 use App\Models\User;
@@ -17,14 +18,12 @@ use Response;
  * Class UserController
  * @package App\Http\Controllers\API
  */
+class UserAPIController extends InfyOmBaseController {
 
-class UserAPIController extends InfyOmBaseController
-{
     /** @var  UserRepository */
     private $userRepository;
 
-    public function __construct(UserRepository $userRepo)
-    {
+    public function __construct(UserRepository $userRepo) {
         $this->userRepository = $userRepo;
     }
 
@@ -60,8 +59,7 @@ class UserAPIController extends InfyOmBaseController
      *      )
      * )
      */
-    public function index(Request $request)
-    {
+    public function index(Request $request) {
         $this->userRepository->pushCriteria(new RequestCriteria($request));
         $this->userRepository->pushCriteria(new LimitOffsetCriteria($request));
         $users = $this->userRepository->all();
@@ -107,8 +105,7 @@ class UserAPIController extends InfyOmBaseController
      *      )
      * )
      */
-    public function store(CreateUserAPIRequest $request)
-    {
+    public function store(CreateUserAPIRequest $request) {
         $input = $request->all();
 
         $users = $this->userRepository->create($input);
@@ -154,8 +151,7 @@ class UserAPIController extends InfyOmBaseController
      *      )
      * )
      */
-    public function show($id)
-    {
+    public function show($id) {
         /** @var User $user */
         $user = $this->userRepository->find($id);
 
@@ -212,8 +208,7 @@ class UserAPIController extends InfyOmBaseController
      *      )
      * )
      */
-    public function update($id, UpdateUserAPIRequest $request)
-    {
+    public function update($id, UpdateUserAPIRequest $request) {
         $input = $request->all();
 
         /** @var User $user */
@@ -266,8 +261,7 @@ class UserAPIController extends InfyOmBaseController
      *      )
      * )
      */
-    public function destroy($id)
-    {
+    public function destroy($id) {
         /** @var User $user */
         $user = $this->userRepository->find($id);
 
@@ -279,4 +273,28 @@ class UserAPIController extends InfyOmBaseController
 
         return $this->sendResponse($id, 'User deleted successfully');
     }
+
+    public function logout() {
+        Auth::guard($this->getGuard())->logout();
+        return Response::json(ResponseUtil::makeSucess('Logout'), 200);
+    }
+
+    protected function getGuard() {
+        return property_exists($this, 'guard') ? $this->guard : null;
+    }
+
+    public function register(Request $request) {
+        $validator = $this->validator($request->all());
+
+        if ($validator->fails()) {
+            $this->throwValidationException(
+                    $request, $validator
+            );
+        }
+
+        Auth::guard($this->getGuard())->login($this->create($request->all()));
+
+        return redirect($this->redirectPath());
+    }
+
 }

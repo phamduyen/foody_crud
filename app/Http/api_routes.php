@@ -14,7 +14,9 @@
 Route::resource('authenticate', 'AuthenticateController', ['only' => ['index']]);
 Route::post('authenticate', 'AuthenticateController@authenticate');
 Route::get('authenticate/user', 'AuthenticateController@getAuthenticatedUser');
-
+// Registration Routes...
+Route::post('register', 'UserAPIController@store');
+Route::get('logout', 'UserAPIController@logout');
 Route::resource('categories', 'CategoryAPIController');
 
 Route::resource('foods', 'FoodAPIController');

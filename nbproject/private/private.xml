@@ -3,15 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/E:/wamp64/www/foody_crud/composer.json</file>
-            <file>file:/E:/wamp64/www/foody_crud/app/Http/Controllers/API/FoodAPIController.php</file>
-            <file>file:/E:/wamp64/www/foody_crud/app/Http/Controllers/API/AuthenticateController.php</file>
-            <file>file:/E:/wamp64/www/foody_crud/config/app.php</file>
-            <file>file:/E:/wamp64/www/foody_crud/config/jwt.php</file>
-            <file>file:/E:/wamp64/www/foody_crud/app/Http/Middleware/VerifyCsrfToken.php</file>
-            <file>file:/E:/wamp64/www/foody_crud/app/Http/Controllers/API/CategoryAPIController.php</file>
+            <file>file:/E:/wamp64/www/foody_crud/app/Http/Controllers/API/UserAPIController.php</file>
+            <file>file:/E:/wamp64/www/foody_crud/app/Http/Controllers/API/Auth/PasswordController.php</file>
             <file>file:/E:/wamp64/www/foody_crud/app/Http/api_routes.php</file>
-            <file>file:/E:/wamp64/www/foody_crud/app/Http/Kernel.php</file>
+            <file>file:/E:/wamp64/www/foody_crud/app/Http/routes.php</file>
         </group>
     </open-files>
 </project-private>
